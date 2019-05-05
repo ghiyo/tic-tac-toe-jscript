@@ -1,20 +1,33 @@
 
-var originalBoard;
+/* This variable will be used to figure out which 
+   squares are used by which players to determine the winner. */
+var originalBoard; 
+
+/* Simple letters are used for player signs when they play
+   and each color is to a distinguish background color of cells
+   belonging to each respective player. */
 var playerOne = {"sign":"O", "color":"lightgreen"};
 var playerTwo = {"sign":"X", "color":"wheat"};
+
+/* This variable is used to check which player's turn it is */  
 var currentPlayer;
 
+/* List of all combinations of cells that represent a win condition */
 var winConditions = [
     [0,1,2],[3,4,5],[6,7,8],
     [0,3,6],[1,4,7],[2,5,8],
     [0,4,8],[2,4,6]
 ];
 
+/* Grab all cells in the board */
 const cells = document.querySelectorAll(".cell");
+
+/* Grab the end game message box */
 const gameOverMsgBox = document.querySelector(".end-game");
 
 startGame();
 
+/* Initialize all variables for the start of a game */
 function startGame() {
     currentPlayer = playerOne;
     originalBoard = [];
@@ -29,6 +42,14 @@ function startGame() {
     
 }
 
+/* Each time a player clicks on a cell on their turn the following
+   will happen:
+   - set the cell sign to be player's sign
+   - set the cell's background color to player's background color
+   - keep track of the cell that was taken by the player by saving
+     it in a list
+   - turn off the clickability of the cell
+   - check to see whether the game should be over */
 function turnClick(square) {
     square.target.innerText = currentPlayer.sign;
     square.target.style.backgroundColor = currentPlayer.color;
@@ -39,6 +60,8 @@ function turnClick(square) {
     if (gameWon) gameOver(gameWon);
 }
 
+/* This method will pass the turn to the other player from the 
+ * current player. */
 function turn(player) {
     if (player.sign === playerOne.sign) {
         return playerTwo;
@@ -46,6 +69,12 @@ function turn(player) {
     return playerOne;
 }
 
+/* This method checks to see who has won by doing the following:
+   - save all cells pressed by each player in their own lists
+   - for each list check to see if the player has won by checking
+     against the win conditions list
+   - if a player has won return the winner if no player has won and
+     all cells have been used up then the game is a tie.*/
 function checkWin(originalBoard) {
     let playerOneSquares = [];
     let playerTwoSquares = [];
@@ -67,6 +96,9 @@ function checkWin(originalBoard) {
     return gameWon;
 }
 
+/* This is the game over routine where end game message box
+   becomes visible and the text within is set to whatever the
+   outcome was from the checkWin function */
 function gameOver(winner) {
     let msg;
     gameOverMsgBox.style.display = "block";
